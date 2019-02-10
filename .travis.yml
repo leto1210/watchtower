@@ -1,8 +1,32 @@
-services:
-  - docker
+language: minimal
+services: docker
+
+env:
+  - DOCKER_COMPOSE_VERSION=1.21.1
+
+before_script:
+  # Build images
+  - docker-compose build
+
+install:
+  # Install Docker Compose
+  - curl -L "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o "$HOME/bin/docker-compose"
+  - chmod +x "$HOME/bin/docker-compose"
+  - docker-compose --version
+ 
+branches:
+  only:
+    - master
   
- install:
-   - docker-compose up -d
+install:
+  - docker-compose up -d
+  - docker-compose ps
+  - docker-compose logs
+  #- docker-compose down -v
    
  script:
   - docker ps | grep -q watchtower
+  
+ after_script:
+  - docker-compose stop
+  - docker-compose rm -f
