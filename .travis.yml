@@ -1,0 +1,8 @@
+services:
+  - docker
+  
+ install:
+   - docker-compose up -d
+   
+ script:
+  - docker ps | grep -q watchtower
