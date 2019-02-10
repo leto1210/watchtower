@@ -8,25 +8,20 @@ branches:
   only:
     - master
 
-#before_script:
-  # Build images
-  #- docker-compose build
-
-before_install:
+install:
   # Install Docker Compose
   - curl -L "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o "$HOME/bin/docker-compose"
   - chmod +x "$HOME/bin/docker-compose"
   - docker-compose --version
   
-install:
+script:
   - docker-compose up -d
+  - sleep 5
   - docker-compose ps
   - docker-compose logs
   #- docker-compose down -v
-   
- script:
   - docker ps | grep -q watchtower
   
- after_script:
+after_script:
   - docker-compose stop
   - docker-compose rm -f
